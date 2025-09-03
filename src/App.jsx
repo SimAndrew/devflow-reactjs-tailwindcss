@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Developers from './components/Developers';
+import ApiDevelopment from './components/ApiDevelopment';
 
 function App() {
 	return (
@@ -8,6 +9,7 @@ function App() {
 			<Navbar />
 			<Hero />
 			<Developers />
+			<ApiDevelopment />
 		</div>
 	);
 }
