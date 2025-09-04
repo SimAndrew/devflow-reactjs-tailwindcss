@@ -1,50 +1,6 @@
-const ApiDevelopment = () => {
-	return (
-		<section className="bg-gray-50 py-20">
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-				{/* Header */}
-				<div className="mb-12 space-y-2">
-					<h2 className="text-center text-3xl font-bold text-gray-900 sm:text-4xl">
-						Simple, powerful API development
-					</h2>
-					<p className="text-center text-gray-600">
-						From simple REST endpoints to complex GraphQL services, build it all
-						with DevFlow.
-					</p>
-				</div>
+import { useState } from 'react';
 
-				{/* Tabs */}
-				<div className="mb-8 flex justify-center space-x-8">
-					<button className="border-b-2 border-indigo-600 pb-2 font-medium text-indigo-600">
-						REST API
-					</button>
-					<button className="pb-2 font-medium text-gray-500 hover:text-gray-900">
-						GraphQL
-					</button>
-					<button className="pb-2 font-medium text-gray-500 hover:text-gray-900">
-						Webhooks
-					</button>
-					<button className="pb-2 font-medium text-gray-500 hover:text-gray-900">
-						Authentication
-					</button>
-				</div>
-
-				{/* Code Example */}
-				<div className="mx-auto max-w-4xl overflow-hidden rounded-xl bg-[#0B1120] shadow-2xl">
-					{/* Terminal Header */}
-					<div className="flex items-center justify-between bg-[#1E293B] px-4 py-3">
-						<div className="flex items-center space-x-2">
-							<div className="h-3 w-3 rounded-full bg-[#FF5F56]"></div>
-							<div className="h-3 w-3 rounded-full bg-[#FFBD2E]"></div>
-							<div className="h-3 w-3 rounded-full bg-[#27C93F]"></div>
-						</div>
-						<span className="font-mono text-sm text-gray-400">todo.ts</span>
-					</div>
-
-					{/* Code Content */}
-					<div className="p-6">
-						<pre className="font-mono text-sm leading-relaxed text-gray-300">
-							{`import { DevFlow } from '@devflow/api';
+const restApiCode = `import { DevFlow } from '@devflow/api';
 import { db } from '@devflow/database';
 
 // Initialize and configure API
@@ -87,19 +43,117 @@ api.get('/todos', async (req, res) => {
 });
 
 // One-command deployment
-api.deploy();`}
-						</pre>
-					</div>
+api.deploy();`;
+
+const graphQLCode = `type Todo {
+  id: ID!
+  title: String!
+  description: String
+  completed: Boolean!
+  createdBy: User!
+}
+
+type Query {
+  todos: [Todo!]!
+}
+
+type Mutation {
+  createTodo(title: String!, description: String): Todo!
+}
+
+# Example resolver
+const resolvers = {
+  Query: {
+    todos: (_, __, { db, user }) =>
+      db.todos.findMany({ where: { userId: user.id } })
+  },
+  Mutation: {
+    createTodo: (_, { title, description }, { db, user }) =>
+      db.todos.create({
+        title,
+        description,
+        completed: false,
+        created_by: user.id
+      })
+  }
+};`;
+
+const webhooksCode = `// Register webhook endpoint
+api.webhook('/webhook/payment', async (req, res) => {
+  const event = req.body;
+  // Handle payment event
+  // ...
+  res.status(200).send('Received');
+});`;
+
+const authCode = `// Authentication middleware
+api.use(async (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  // Validate token and set user
+  req.user = await verifyToken(token);
+  next();
+});`;
+
+const tabs = [
+	{ name: 'REST API', code: restApiCode },
+	{ name: 'GraphQL', code: graphQLCode },
+	{ name: 'Webhooks', code: webhooksCode },
+	{ name: 'Authentication', code: authCode },
+];
+
+const ApiDevelopment = () => {
+	const [activeTab, setActiveTab] = useState(0);
+
+	return (
+		<section className="bg-gray-50 py-20">
+			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+				{/* Header */}
+				<div className="mb-12 space-y-2">
+					<h2 className="text-center text-3xl font-bold text-gray-900 sm:text-4xl">
+						Simple, powerful API development
+					</h2>
+					<p className="text-center text-gray-600">
+						From simple REST endpoints to complex GraphQL services, build it all
+						with DevFlow.
+					</p>
 				</div>
 
-				{/* Footer Link */}
-				<div className="mt-8 text-center">
-					<a
-						href="#docs"
-						className="inline-flex items-center font-medium text-indigo-600 hover:text-indigo-700"
-					>
-						View more examples in docs →
-					</a>
+				{/* Tabs */}
+				<div className="mb-8 flex justify-center space-x-8">
+					{tabs.map((tab, idx) => (
+						<button
+							key={tab.name}
+							className={`pb-2 font-medium transition-colors duration-150 ${
+								activeTab === idx
+									? 'border-b-2 border-indigo-600 text-indigo-600'
+									: 'text-gray-500 hover:text-gray-900'
+							}`}
+							onClick={() => setActiveTab(idx)}
+						>
+							{tab.name}
+						</button>
+					))}
+				</div>
+
+				{/* Code Example */}
+				<div className="mx-auto max-w-4xl overflow-hidden rounded-xl bg-[#0B1120] shadow-2xl">
+					{/* Terminal Header */}
+					<div className="flex items-center justify-between bg-[#1E293B] px-4 py-3">
+						<div className="flex items-center space-x-2">
+							<div className="h-3 w-3 rounded-full bg-[#FF5F56]"></div>
+							<div className="h-3 w-3 rounded-full bg-[#FFBD2E]"></div>
+							<div className="h-3 w-3 rounded-full bg-[#27C93F]"></div>
+						</div>
+						<span className="text-xs text-gray-400">devflow-api.js</span>
+					</div>
+					<div className="p-6">
+						<pre className="font-mono text-sm leading-relaxed whitespace-pre-wrap text-gray-300">
+							{tabs[activeTab].code}
+						</pre>
+					</div>
 				</div>
 			</div>
 		</section>
