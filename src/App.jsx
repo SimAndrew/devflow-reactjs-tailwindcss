@@ -6,6 +6,7 @@ import DashboardManagement from './components/DashboardManagement';
 import TrustedByDevelopers from './components/TrustedByDevelopers.jsx';
 import TryIt from './components/TryIt.jsx';
 import ReadyToCharge from './components/ReadyToCharge.jsx';
+import DocumentationSupport from './components/DocumentationSupport.jsx';
 
 function App() {
 	return (
@@ -18,6 +19,7 @@ function App() {
 			<TrustedByDevelopers />
 			<TryIt />
 			<ReadyToCharge />
+			<DocumentationSupport />
 		</div>
 	);
 }
