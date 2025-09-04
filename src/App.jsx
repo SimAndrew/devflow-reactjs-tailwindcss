@@ -7,6 +7,7 @@ import TrustedByDevelopers from './components/TrustedByDevelopers.jsx';
 import TryIt from './components/TryIt.jsx';
 import ReadyToCharge from './components/ReadyToCharge.jsx';
 import DocumentationSupport from './components/DocumentationSupport.jsx';
+import Integrate from './components/Integrate.jsx';
 
 function App() {
 	return (
@@ -20,6 +21,7 @@ function App() {
 			<TryIt />
 			<ReadyToCharge />
 			<DocumentationSupport />
+			<Integrate />
 		</div>
 	);
 }
