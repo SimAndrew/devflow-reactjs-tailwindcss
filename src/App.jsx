@@ -4,6 +4,7 @@ import Developers from './components/Developers';
 import ApiDevelopment from './components/ApiDevelopment';
 import DashboardManagement from './components/DashboardManagement';
 import TrustedByDevelopers from './components/TrustedByDevelopers.jsx';
+import TryIt from './components/TryIt.jsx';
 
 function App() {
 	return (
@@ -14,6 +15,7 @@ function App() {
 			<ApiDevelopment />
 			<DashboardManagement />
 			<TrustedByDevelopers />
+			<TryIt />
 		</div>
 	);
 }
