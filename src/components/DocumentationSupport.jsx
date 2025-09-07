@@ -16,11 +16,11 @@ const DocumentationSupport = () => {
 	];
 
 	return (
-		<footer className="bg-gray-50 py-12">
-			<div className="mx-auto w-[1024px] px-4">
+		<section className="bg-white py-12">
+			<div className="mx-auto px-4">
 				<div className="flex justify-center">
-					<div className="grid grid-cols-1 gap-24 md:grid-cols-2">
-						<div>
+					<div className="grid grid-cols-1 gap-15 md:grid-cols-2">
+						<div className="mx-auto max-w-md">
 							<h3 className="text-lg font-bold text-gray-900">Documentation</h3>
 							<p className="mt-2 text-base text-gray-500">
 								Comprehensive guides, API references, and examples to help you
@@ -63,7 +63,7 @@ const DocumentationSupport = () => {
 					</div>
 				</div>
 			</div>
-		</footer>
+		</section>
 	);
 };
 

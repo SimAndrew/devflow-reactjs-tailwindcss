@@ -2,7 +2,7 @@ import React from 'react';
 
 const DashboardManagement = () => {
 	return (
-		<section className="py-12">
+		<section className="bg-white py-12">
 			<div className="mb-6 text-center">
 				<h2 className="mb-2 text-2xl font-extrabold text-gray-900 md:text-3xl">
 					Powerful dashboard for API management
