@@ -59,15 +59,6 @@ const TrustedByDevelopers = () => {
 			{
 				breakpoint: 1024,
 				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 1,
-					infinite: true,
-					dots: true,
-				},
-			},
-			{
-				breakpoint: 600,
-				settings: {
 					slidesToShow: 1,
 					slidesToScroll: 1,
 				},
@@ -75,23 +66,29 @@ const TrustedByDevelopers = () => {
 		],
 	};
 	return (
-		<section className="bg-gray-50 py-12">
+		<section className="bg-gray-50 py-12 sm:py-16 lg:py-20">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 				<div className="text-center">
-					<h2 className="text-3xl font-extrabold text-gray-900">
+					<h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
 						Trusted by developers worldwide
 					</h2>
+					<p className="mx-auto mt-4 max-w-2xl text-lg text-gray-500">
+						Teams and individual developers use DevFlow to speed up their
+						development cycle and scale reliably.
+					</p>
 				</div>
 				<div className="mt-10">
 					<Slider {...settings}>
 						{testimonials.map((testimonial, index) => (
 							<div key={index} className="p-4">
-								<div className="h-full rounded-lg bg-white p-6 shadow-md">
+								<div className="flex h-full flex-col rounded-lg bg-white p-6 shadow-md">
 									<div className="mb-4 flex items-center">
 										<div className="flex-shrink-0">
-											<div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200">
-												{/* Placeholder for avatar image */}
-											</div>
+											<img
+												className="h-12 w-12 rounded-full object-cover"
+												src={testimonial.avatar}
+												alt={`Avatar of ${testimonial.name}`}
+											/>
 										</div>
 										<div className="ml-4">
 											<h3 className="text-lg font-semibold text-gray-900">
@@ -102,20 +99,22 @@ const TrustedByDevelopers = () => {
 											</p>
 										</div>
 									</div>
-									<p className="text-gray-600">{testimonial.quote}</p>
+									<p className="flex-grow text-gray-600">{testimonial.quote}</p>
 								</div>
 							</div>
 						))}
 					</Slider>
 				</div>
 				<div className="mt-16 text-center">
-					<p className="text-sm font-semibold tracking-wider text-gray-500">
-						TRUSTED BY COMPANIES OF ALL SIZES
+					<p className="text-sm font-semibold tracking-wider text-gray-500 uppercase">
+						Trusted by companies of all sizes
 					</p>
-					<div className="mt-6 flex items-center justify-center space-x-8">
+					<div className="mt-6 grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-6">
 						{[...Array(6)].map((_, index) => (
-							<div key={index} className="h-12 w-24 rounded-md bg-gray-200">
-								{/* Placeholder for company logo */}
+							<div key={index} className="flex justify-center">
+								<div className="flex h-12 w-24 items-center justify-center rounded-md bg-gray-200 text-xs text-gray-400">
+									LOGO
+								</div>
 							</div>
 						))}
 					</div>
