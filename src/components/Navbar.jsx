@@ -19,11 +19,7 @@ const Navbar = () => {
 					className="flex cursor-pointer items-center gap-2"
 					onClick={() => (window.location.href = '/')}
 				>
-					<img
-						src="/src/assets/devflow-logo.svg"
-						alt="DevFlow"
-						className="h-6 w-6"
-					/>
+					<img src="/devflow-logo.svg" alt="DevFlow" className="h-6 w-6" />
 					<span className="text-lg font-semibold text-gray-900">DevFlow</span>
 				</div>
 

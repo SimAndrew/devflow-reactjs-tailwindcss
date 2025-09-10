@@ -1,7 +1,9 @@
 import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
 
 const testimonials = [
 	{
@@ -49,31 +51,6 @@ const testimonials = [
 ];
 
 const TrustedByDevelopers = () => {
-	const settings = {
-		dots: true,
-		infinite: true,
-		speed: 500,
-		slidesToShow: 3,
-		slidesToScroll: 1,
-		responsive: [
-			{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 1,
-					infinite: true,
-					dots: true,
-				},
-			},
-			{
-				breakpoint: 600,
-				settings: {
-					slidesToShow: 1,
-					slidesToScroll: 1,
-				},
-			},
-		],
-	};
 	return (
 		<section className="bg-gray-50 py-12">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -83,9 +60,27 @@ const TrustedByDevelopers = () => {
 					</h2>
 				</div>
 				<div className="mt-10">
-					<Slider {...settings}>
+					<Swiper
+						slidesPerView={1}
+						spaceBetween={30}
+						pagination={{
+							clickable: true,
+						}}
+						breakpoints={{
+							768: {
+								slidesPerView: 2,
+								spaceBetween: 40,
+							},
+							1024: {
+								slidesPerView: 3,
+								spaceBetween: 50,
+							},
+						}}
+						modules={[Pagination]}
+						className="mySwiper"
+					>
 						{testimonials.map((testimonial, index) => (
-							<div key={index} className="p-4">
+							<SwiperSlide key={index}>
 								<div className="h-full rounded-lg bg-white p-6 shadow-md">
 									<div className="mb-4 flex items-center">
 										<div className="flex-shrink-0">
@@ -104,15 +99,15 @@ const TrustedByDevelopers = () => {
 									</div>
 									<p className="text-gray-600">{testimonial.quote}</p>
 								</div>
-							</div>
+							</SwiperSlide>
 						))}
-					</Slider>
+					</Swiper>
 				</div>
 				<div className="mt-16 text-center">
 					<p className="text-sm font-semibold tracking-wider text-gray-500">
 						TRUSTED BY COMPANIES OF ALL SIZES
 					</p>
-					<div className="mt-6 flex items-center justify-center space-x-8">
+					<div className="mt-6 flex flex-wrap items-center justify-center gap-8">
 						{[...Array(6)].map((_, index) => (
 							<div key={index} className="h-12 w-24 rounded-md bg-gray-200">
 								{/* Placeholder for company logo */}
