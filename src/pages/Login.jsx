@@ -1,68 +1,25 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const Login = () => {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [errors, setErrors] = useState([]);
 	const [showPassword, setShowPassword] = useState(false);
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({ mode: 'onSubmit' });
 
 	const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-	const validate = () => {
-		const errs = [];
-
-		// Email checks
-		if (!email.trim()) {
-			errs.push('Email is required.');
-		} else if (!emailRegex.test(email)) {
-			errs.push(
-				'Enter a valid email (Latin letters, digits, and allowed symbols only).',
-			);
-		}
-
-		// Password checks
-		if (!password) {
-			errs.push('Password is required.');
-		} else {
-			// Only latin letters and digits, exactly 8 chars
-			const onlyAlnum = /^[A-Za-z0-9]+$/.test(password);
-			if (password.length < 8) {
-				errs.push('Password must be at least 8 characters.');
-			}
-			if (!onlyAlnum) {
-				errs.push('Password must contain only Latin letters and digits.');
-			}
-
-			// Composition rule: 8 total with exactly 5 letters (>=1 uppercase) and 3 digits
-			if (onlyAlnum && password.length >= 8) {
-				const letters = (password.match(/[A-Za-z]/g) || []).length;
-				const digits = (password.match(/[0-9]/g) || []).length;
-				const uppers = (password.match(/[A-Z]/g) || []).length;
-				if (
-					!(
-						letters === 5 &&
-						digits === 3 &&
-						uppers >= 1 &&
-						password.length === 8
-					)
-				) {
-					errs.push(
-						'Password must be 8 chars: 5 Latin letters (at least 1 uppercase) and 3 digits.',
-					);
-				}
-			}
-		}
-
-		setErrors(errs);
-		return errs.length === 0;
-	};
-
-	const onSubmit = (e) => {
-		e.preventDefault();
-		if (!validate()) return;
+	const onSubmit = (data) => {
 		// TODO: hook up real auth
-		console.log({ email, password });
+		console.log(data);
 	};
+
+	const errorList = Object.values(errors)
+		.map((e) => e?.message)
+		.filter(Boolean);
 
 	return (
 		<section className="bg-gray-50 py-12">
@@ -75,13 +32,13 @@ const Login = () => {
 				</p>
 
 				<form
-					onSubmit={onSubmit}
+					onSubmit={handleSubmit(onSubmit)}
 					className="mt-8 rounded-xl border border-gray-100 bg-white p-6 shadow-sm"
 				>
-					{errors.length > 0 && (
+					{errorList.length > 0 && (
 						<div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
 							<ul className="list-disc pl-5">
-								{errors.map((er, i) => (
+								{errorList.map((er, i) => (
 									<li key={i}>{er}</li>
 								))}
 							</ul>
@@ -93,11 +50,16 @@ const Login = () => {
 					</label>
 					<input
 						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						required
 						className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
 						placeholder="you@example.com"
+						{...register('email', {
+							required: 'Email is required.',
+							pattern: {
+								value: emailRegex,
+								message:
+									'Enter a valid email (Latin letters, digits, and allowed symbols only).',
+							},
+						})}
 					/>
 
 					<label className="mt-4 block text-sm font-medium text-gray-700">
@@ -106,12 +68,35 @@ const Login = () => {
 					<div className="relative">
 						<input
 							type={showPassword ? 'text' : 'password'}
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							required
 							className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-gray-900 placeholder-gray-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:outline-none"
 							placeholder="••••••••"
 							aria-describedby="password-hint"
+							{...register('password', {
+								required: 'Password is required.',
+								minLength: {
+									value: 8,
+									message: 'Password must be at least 8 characters.',
+								},
+								validate: (value) => {
+									if (!/^[A-Za-z0-9]+$/.test(value)) {
+										return 'Password must contain only Latin letters and digits.';
+									}
+									const letters = (value.match(/[A-Za-z]/g) || []).length;
+									const digits = (value.match(/[0-9]/g) || []).length;
+									const uppers = (value.match(/[A-Z]/g) || []).length;
+									if (
+										!(
+											letters === 5 &&
+											digits === 3 &&
+											uppers >= 1 &&
+											value.length === 8
+										)
+									) {
+										return 'Password must be 8 chars: 5 Latin letters (at least 1 uppercase) and 3 digits.';
+									}
+									return true;
+								},
+							})}
 						/>
 						<button
 							type="button"
