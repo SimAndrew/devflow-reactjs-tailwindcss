@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { navLinks } from '../data/navLinks';
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
+	const navigate = useNavigate();
 
 	const linkBase = 'text-sm font-medium transition-colors';
 	const inactive = 'text-gray-600 hover:text-gray-900';
@@ -14,7 +15,7 @@ const Navbar = () => {
 			<div className="mx-auto flex max-w-7xl items-center justify-between">
 				<div
 					className="flex cursor-pointer items-center gap-2"
-					onClick={() => (window.location.href = '/')}
+					onClick={() => navigate('/')}
 				>
 					<img src="/devflow-logo.svg" alt="DevFlow" className="h-6 w-6" />
 					<span className="text-lg font-semibold text-gray-900">DevFlow</span>
@@ -39,10 +40,16 @@ const Navbar = () => {
 
 				{/* Desktop Actions */}
 				<div className="hidden items-center gap-4 md:flex">
-					<button className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900">
+					<button
+						className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+						onClick={() => navigate('/login')}
+					>
 						Log In
 					</button>
-					<button className="cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700">
+					<button
+						className="cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+						onClick={() => navigate('/signup')}
+					>
 						Get Started
 					</button>
 				</div>
@@ -94,7 +101,11 @@ const Navbar = () => {
 								to={l.to}
 								onClick={() => setOpen(false)}
 								className={({ isActive }) =>
-									`rounded-md px-3 py-2 text-base font-medium transition-colors ${isActive ? 'text-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`
+									`rounded-md px-3 py-2 text-base font-medium transition-colors ${
+										isActive
+											? 'text-indigo-600'
+											: 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+									}`
 								}
 							>
 								{l.label}
@@ -102,10 +113,22 @@ const Navbar = () => {
 						))}
 					</div>
 					<div className="flex flex-col gap-3 px-4">
-						<button className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
+						<button
+							className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+							onClick={() => {
+								navigate('/login');
+								setOpen(false);
+							}}
+						>
 							Log In
 						</button>
-						<button className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700">
+						<button
+							className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+							onClick={() => {
+								navigate('/signup');
+								setOpen(false);
+							}}
+						>
 							Get Started
 						</button>
 					</div>
