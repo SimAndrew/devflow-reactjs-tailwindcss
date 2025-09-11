@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
 	const [showCode, setShowCode] = useState(false);
@@ -10,25 +11,26 @@ const Hero = () => {
 				className="pointer-events-none absolute inset-0 [background-image:radial-gradient(circle_at_center,rgba(255,255,255,0.25)_1px,transparent_1px)] [background-size:22px_22px] opacity-20"
 			/>
 			<div className="relative mx-auto flex max-w-7xl flex-col px-4 pt-24 pb-14 sm:px-6 md:pt-28 md:pb-20 lg:flex-row lg:items-center lg:gap-12 lg:px-8">
-				{/* Левая часть */}
 				<div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
 					<h1 className="text-3xl leading-[1.1] font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl xl:text-6xl">
 						<span className="block">Build APIs in minutes,</span>
 						<span className="block text-indigo-200">not months</span>
 					</h1>
+
 					<p className="mt-5 max-w-xl text-base text-indigo-100/90 sm:text-lg md:text-xl">
 						DevFlow's serverless API platform lets you focus on code, not
 						infrastructure. Scale automatically from prototype to production.
 					</p>
+
 					<div className="mt-8 flex w-full flex-col items-center gap-3 sm:mb-6 sm:flex-row sm:justify-center lg:justify-start">
-						<a
-							href="#"
+						<Link
+							to="/"
 							className="inline-flex w-full items-center justify-center rounded-lg bg-white px-7 py-3.5 text-base font-semibold text-indigo-600 shadow-sm ring-1 shadow-indigo-900/10 ring-white/40 transition hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-200 sm:w-auto sm:text-lg"
 						>
 							Get Started Free
-						</a>
-						<a
-							href="#"
+						</Link>
+						<Link
+							to="/docs"
 							className="inline-flex items-center gap-2 text-base font-semibold text-white/90 transition hover:text-white sm:text-lg"
 						>
 							<span>View Docs</span>
@@ -44,9 +46,9 @@ const Hero = () => {
 								<path d="M5 12h14" />
 								<path d="m12 5 7 7-7 7" />
 							</svg>
-						</a>
+						</Link>
 					</div>
-					{/* Кнопка показать/скрыть код на мобильных */}
+
 					<button
 						type="button"
 						onClick={() => setShowCode((v) => !v)}

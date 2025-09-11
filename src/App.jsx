@@ -1,27 +1,24 @@
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Developers from './components/Developers';
-import ApiDevelopment from './components/ApiDevelopment';
-import DashboardManagement from './components/DashboardManagement';
-import TrustedByDevelopers from './components/TrustedByDevelopers.jsx';
-import TryIt from './components/TryIt.jsx';
-import ReadyToCharge from './components/ReadyToCharge.jsx';
-import DocumentationSupport from './components/DocumentationSupport.jsx';
-import Integrate from './components/Integrate.jsx';
+import Home from './components/Home.jsx';
+import Features from './pages/Features.jsx';
+import Examples from './pages/Examples.jsx';
+import Testimonials from './pages/Testimonials.jsx';
+import Docs from './pages/Docs.jsx';
+import Community from './pages/Community.jsx';
 
 function App() {
 	return (
 		<div className="min-h-screen bg-gray-50">
 			<Navbar />
-			<Hero />
-			<Developers />
-			<ApiDevelopment />
-			<DashboardManagement />
-			<TrustedByDevelopers />
-			<TryIt />
-			<ReadyToCharge />
-			<DocumentationSupport />
-			<Integrate />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/features" element={<Features />} />
+				<Route path="/examples" element={<Examples />} />
+				<Route path="/testimonials" element={<Testimonials />} />
+				<Route path="/docs" element={<Docs />} />
+				<Route path="/community" element={<Community />} />
+			</Routes>
 		</div>
 	);
 }

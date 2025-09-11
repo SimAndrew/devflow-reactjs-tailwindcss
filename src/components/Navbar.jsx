@@ -1,20 +1,17 @@
 import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { navLinks } from '../data/navLinks';
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
 
-	const navLinks = [
-		{ href: '#features', label: 'Features' },
-		{ href: '#examples', label: 'Examples' },
-		{ href: '#testimonials', label: 'Testimonials' },
-		{ href: '#docs', label: 'Docs' },
-		{ href: '#community', label: 'Community' },
-	];
+	const linkBase = 'text-sm font-medium transition-colors';
+	const inactive = 'text-gray-600 hover:text-gray-900';
+	const active = 'text-indigo-600';
 
 	return (
 		<nav className="w-full border-b border-gray-100 bg-white/90 px-4 py-3 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/70 sm:px-6 md:py-4">
 			<div className="mx-auto flex max-w-7xl items-center justify-between">
-				{/* Logo / Brand */}
 				<div
 					className="flex cursor-pointer items-center gap-2"
 					onClick={() => (window.location.href = '/')}
@@ -25,15 +22,19 @@ const Navbar = () => {
 
 				{/* Desktop Navigation */}
 				<div className="hidden items-center gap-8 md:flex">
-					{navLinks.map((l) => (
-						<a
-							key={l.href}
-							href={l.href}
-							className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
-						>
-							{l.label}
-						</a>
-					))}
+					<nav className="flex items-center gap-8">
+						{navLinks.map((l) => (
+							<NavLink
+								key={l.to}
+								to={l.to}
+								className={({ isActive }) =>
+									`${linkBase} ${isActive ? active : inactive}`
+								}
+							>
+								{l.label}
+							</NavLink>
+						))}
+					</nav>
 				</div>
 
 				{/* Desktop Actions */}
@@ -54,7 +55,6 @@ const Navbar = () => {
 					aria-expanded={open}
 				>
 					<span className="sr-only">Menu</span>
-					{/* Icon */}
 					<svg
 						className={`h-6 w-6 transition-transform ${open ? 'rotate-90' : ''}`}
 						xmlns="http://www.w3.org/2000/svg"
@@ -89,14 +89,16 @@ const Navbar = () => {
 				<div className="space-y-6 border-t border-gray-100 pt-2 pb-6">
 					<div className="flex flex-col px-2">
 						{navLinks.map((l) => (
-							<a
-								key={l.href}
-								href={l.href}
+							<NavLink
+								key={l.to}
+								to={l.to}
 								onClick={() => setOpen(false)}
-								className="rounded-md px-3 py-2 text-base font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900"
+								className={({ isActive }) =>
+									`rounded-md px-3 py-2 text-base font-medium transition-colors ${isActive ? 'text-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`
+								}
 							>
 								{l.label}
-							</a>
+							</NavLink>
 						))}
 					</div>
 					<div className="flex flex-col gap-3 px-4">
