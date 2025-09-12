@@ -1,11 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { supabase } from '../lib/supabaseClient';
 
 const Signup = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirm, setShowConfirm] = useState(false);
+	const [serverError, setServerError] = useState(null);
+	const [submitting, setSubmitting] = useState(false);
 	const errorRef = useRef(null);
+	const navigate = useNavigate();
 
 	const {
 		register,
@@ -17,9 +21,43 @@ const Signup = () => {
 	const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const passwordValue = watch('password', '');
 
-	const onSubmit = (data) => {
-		// TODO: hook up real API
-		console.log('Signup payload', data);
+	const onSubmit = async (data) => {
+		setServerError(null);
+		setSubmitting(true);
+		try {
+			const { name, email, password } = data;
+
+			const { data: signUpData, error } = await supabase.auth.signUp({
+				email,
+				password,
+				options: {
+					data: { full_name: name },
+					emailRedirectTo: `${window.location.origin}/auth/callback`,
+				},
+			});
+			if (error) throw error;
+
+			try {
+				const userId =
+					signUpData.user?.id ?? signUpData.session?.user?.id ?? null;
+				if (userId) {
+					await supabase
+						.from('profiles')
+						.upsert({ id: userId, full_name: name }, { onConflict: 'id' });
+				}
+			} catch (profileErr) {
+				console.warn('profiles upsert skipped:', profileErr?.message);
+			}
+
+			navigate('/login', {
+				replace: true,
+				state: { msg: 'Проверьте почту для подтверждения аккаунта.' },
+			});
+		} catch (e) {
+			setServerError(e.message || 'Signup error');
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	const errorList = Object.values(errors)
@@ -57,6 +95,12 @@ const Signup = () => {
 									<li key={i}>{er}</li>
 								))}
 							</ul>
+						</div>
+					)}
+
+					{serverError && (
+						<div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+							{serverError}
 						</div>
 					)}
 
@@ -279,9 +323,10 @@ const Signup = () => {
 
 					<button
 						type="submit"
-						className="mt-6 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+						disabled={submitting}
+						className="mt-6 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 disabled:opacity-50"
 					>
-						Create account
+						{submitting ? 'Creating...' : 'Create account'}
 					</button>
 
 					<p className="mt-4 text-center text-sm text-gray-600">

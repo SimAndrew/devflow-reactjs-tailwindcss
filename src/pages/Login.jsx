@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { supabase } from '../lib/supabaseClient';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
+	const [serverError, setServerError] = useState(null);
+	const [submitting, setSubmitting] = useState(false);
+	const navigate = useNavigate();
+	const location = useLocation();
+	const info = location.state?.msg;
 
 	const {
 		register,
@@ -12,9 +19,21 @@ const Login = () => {
 
 	const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-	const onSubmit = (data) => {
-		// TODO: hook up real auth
-		console.log(data);
+	const onSubmit = async ({ email, password }) => {
+		setServerError(null);
+		setSubmitting(true);
+		try {
+			const { error } = await supabase.auth.signInWithPassword({
+				email,
+				password,
+			});
+			if (error) throw error;
+			navigate('/', { replace: true });
+		} catch (e) {
+			setServerError(e.message || 'Login error');
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	const errorList = Object.values(errors)
@@ -31,9 +50,20 @@ const Login = () => {
 					Welcome back. Please enter your credentials.
 				</p>
 
+				{info && (
+					<div className="mt-4 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700">
+						{info}
+					</div>
+				)}
+				{serverError && (
+					<div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+						{serverError}
+					</div>
+				)}
+
 				<form
 					onSubmit={handleSubmit(onSubmit)}
-					className="mt-8 rounded-xl border border-gray-100 bg-white p-6 shadow-sm"
+					className="mt-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm"
 				>
 					{errorList.length > 0 && (
 						<div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -156,10 +186,21 @@ const Login = () => {
 
 					<button
 						type="submit"
-						className="mt-6 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+						disabled={submitting}
+						className="mt-6 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 disabled:opacity-50"
 					>
-						Log In
+						{submitting ? 'Signing in...' : 'Log In'}
 					</button>
+
+					<p className="mt-4 text-center text-sm text-gray-600">
+						No account?{' '}
+						<Link
+							to="/signup"
+							className="font-medium text-indigo-600 hover:text-indigo-700"
+						>
+							Create one
+						</Link>
+					</p>
 				</form>
 			</div>
 		</section>
