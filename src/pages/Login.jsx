@@ -1,9 +1,12 @@
+// Login page: user sign-in with validation and Supabase auth
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { supabase } from '../lib/supabaseClient';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
+// Login page component
 const Login = () => {
+	// UI state: toggles and request status
 	const [showPassword, setShowPassword] = useState(false);
 	const [serverError, setServerError] = useState(null);
 	const [submitting, setSubmitting] = useState(false);
@@ -11,14 +14,17 @@ const Login = () => {
 	const location = useLocation();
 	const info = location.state?.msg;
 
+	// React Hook Form setup
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({ mode: 'onSubmit' });
 
+	// Validation helpers (email regex)
 	const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+	// Submit handler: sign in via Supabase and redirect to profile
 	const onSubmit = async ({ email, password }) => {
 		setServerError(null);
 		setSubmitting(true);
@@ -28,7 +34,7 @@ const Login = () => {
 				password,
 			});
 			if (error) throw error;
-			navigate('/', { replace: true });
+			navigate('/profile', { replace: true });
 		} catch (e) {
 			setServerError(e.message || 'Login error');
 		} finally {
@@ -36,10 +42,12 @@ const Login = () => {
 		}
 	};
 
+	// Collect validation error messages for the banner
 	const errorList = Object.values(errors)
 		.map((e) => e?.message)
 		.filter(Boolean);
 
+	// Render
 	return (
 		<section className="bg-gray-50 py-12">
 			<div className="mx-auto max-w-md px-4 sm:px-6 lg:px-8">
@@ -50,11 +58,13 @@ const Login = () => {
 					Welcome back. Please enter your credentials.
 				</p>
 
+				{/* Info banner from navigation state */}
 				{info && (
 					<div className="mt-4 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700">
 						{info}
 					</div>
 				)}
+				{/* Server error message */}
 				{serverError && (
 					<div className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
 						{serverError}
@@ -65,6 +75,7 @@ const Login = () => {
 					onSubmit={handleSubmit(onSubmit)}
 					className="mt-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm"
 				>
+					{/* Validation errors banner */}
 					{errorList.length > 0 && (
 						<div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
 							<ul className="list-disc pl-5">
@@ -75,6 +86,7 @@ const Login = () => {
 						</div>
 					)}
 
+					{/* Email field */}
 					<label className="block text-sm font-medium text-gray-700">
 						Email
 					</label>
@@ -92,6 +104,7 @@ const Login = () => {
 						})}
 					/>
 
+					{/* Password field with show/hide toggle and custom rules */}
 					<label className="mt-4 block text-sm font-medium text-gray-700">
 						Password
 					</label>
@@ -179,11 +192,13 @@ const Login = () => {
 							)}
 						</button>
 					</div>
+					{/* Password hint */}
 					<p id="password-hint" className="mt-1 text-xs text-gray-500">
 						Password must be 8 characters: 5 Latin letters (at least 1
 						uppercase) and 3 digits; Latin letters and digits only.
 					</p>
 
+					{/* Submit button */}
 					<button
 						type="submit"
 						disabled={submitting}
@@ -192,6 +207,7 @@ const Login = () => {
 						{submitting ? 'Signing in...' : 'Log In'}
 					</button>
 
+					{/* Link to signup */}
 					<p className="mt-4 text-center text-sm text-gray-600">
 						No account?{' '}
 						<Link

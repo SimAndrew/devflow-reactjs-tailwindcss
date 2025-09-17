@@ -8,6 +8,8 @@ import Docs from './pages/Docs.jsx';
 import Community from './pages/Community.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Profile from './pages/Profile.jsx';
 
 function App() {
 	return (
@@ -22,6 +24,9 @@ function App() {
 				<Route path="/community" element={<Community />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/signup" element={<Signup />} />
+				<Route element={<ProtectedRoute />}>
+					<Route path="/profile" element={<Profile />} />
+				</Route>
 			</Routes>
 		</div>
 	);

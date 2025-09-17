@@ -1,9 +1,12 @@
+// Signup page: user registration with validation and Supabase auth
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { supabase } from '../lib/supabaseClient';
 
+// Signup page component
 const Signup = () => {
+	// UI state: toggles and request status
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirm, setShowConfirm] = useState(false);
 	const [serverError, setServerError] = useState(null);
@@ -11,6 +14,7 @@ const Signup = () => {
 	const errorRef = useRef(null);
 	const navigate = useNavigate();
 
+	// React Hook Form setup
 	const {
 		register,
 		handleSubmit,
@@ -18,9 +22,11 @@ const Signup = () => {
 		formState: { errors },
 	} = useForm({ mode: 'onSubmit' });
 
+	// Validation helpers (email regex) and watched values
 	const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const passwordValue = watch('password', '');
 
+	// Submit handler: create account via Supabase and seed profile
 	const onSubmit = async (data) => {
 		setServerError(null);
 		setSubmitting(true);
@@ -51,7 +57,7 @@ const Signup = () => {
 
 			navigate('/login', {
 				replace: true,
-				state: { msg: 'Проверьте почту для подтверждения аккаунта.' },
+				state: { msg: 'Check your email to confirm your account.' },
 			});
 		} catch (e) {
 			setServerError(e.message || 'Signup error');
@@ -60,16 +66,19 @@ const Signup = () => {
 		}
 	};
 
+	// Collect validation error messages for the banner
 	const errorList = Object.values(errors)
 		.map((e) => e?.message)
 		.filter(Boolean);
 
+	// Auto-scroll to the error banner when errors appear
 	useEffect(() => {
 		if (errorList.length > 0 && errorRef.current) {
 			errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		}
 	}, [errorList.length]);
 
+	// Render
 	return (
 		<section className="bg-gray-50 py-12">
 			<div className="mx-auto max-w-md px-4 sm:px-6 lg:px-8">
@@ -84,6 +93,7 @@ const Signup = () => {
 					onSubmit={handleSubmit(onSubmit)}
 					className="mt-8 rounded-xl border border-gray-100 bg-white p-6 shadow-sm"
 				>
+					{/* Validation errors banner */}
 					{errorList.length > 0 && (
 						<div
 							ref={errorRef}
@@ -98,12 +108,14 @@ const Signup = () => {
 						</div>
 					)}
 
+					{/* Server error message */}
 					{serverError && (
 						<div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
 							{serverError}
 						</div>
 					)}
 
+					{/* Full name field */}
 					<label className="block text-sm font-medium text-gray-700">
 						Full name
 					</label>
@@ -126,6 +138,7 @@ const Signup = () => {
 						})}
 					/>
 
+					{/* Email field */}
 					<label className="mt-4 block text-sm font-medium text-gray-700">
 						Email
 					</label>
@@ -144,6 +157,7 @@ const Signup = () => {
 						})}
 					/>
 
+					{/* Password field with show/hide toggle and custom rules */}
 					<label className="mt-4 block text-sm font-medium text-gray-700">
 						Password
 					</label>
@@ -237,6 +251,7 @@ const Signup = () => {
 						uppercase) and 3 digits; Latin letters and digits only.
 					</p>
 
+					{/* Confirm password field with show/hide toggle */}
 					<label className="mt-4 block text-sm font-medium text-gray-700">
 						Confirm password
 					</label>
@@ -304,6 +319,7 @@ const Signup = () => {
 						</button>
 					</div>
 
+					{/* Terms consent checkbox */}
 					<label className="mt-5 inline-flex items-center gap-2 text-sm text-gray-700">
 						<input
 							type="checkbox"
@@ -321,6 +337,7 @@ const Signup = () => {
 						.
 					</label>
 
+					{/* Submit button */}
 					<button
 						type="submit"
 						disabled={submitting}
@@ -329,6 +346,7 @@ const Signup = () => {
 						{submitting ? 'Creating...' : 'Create account'}
 					</button>
 
+					{/* Link to login */}
 					<p className="mt-4 text-center text-sm text-gray-600">
 						Already have an account?{' '}
 						<Link

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { navLinks } from '../data/navLinks';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
+	const { user, signOut } = useAuth();
 
 	const linkBase = 'text-sm font-medium transition-colors';
 	const inactive = 'text-gray-600 hover:text-gray-900';
@@ -40,18 +42,40 @@ const Navbar = () => {
 
 				{/* Desktop Actions */}
 				<div className="hidden items-center gap-4 md:flex">
-					<button
-						className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
-						onClick={() => navigate('/login')}
-					>
-						Log In
-					</button>
-					<button
-						className="cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
-						onClick={() => navigate('/signup')}
-					>
-						Get Started
-					</button>
+					{!user ? (
+						<>
+							<button
+								className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+								onClick={() => navigate('/login')}
+							>
+								Log In
+							</button>
+							<button
+								className="cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+								onClick={() => navigate('/signup')}
+							>
+								Get Started
+							</button>
+						</>
+					) : (
+						<>
+							<button
+								className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+								onClick={() => navigate('/profile')}
+							>
+								Profile
+							</button>
+							<button
+								className="cursor-pointer rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-gray-900"
+								onClick={async () => {
+									await signOut();
+									navigate('/');
+								}}
+							>
+								Log Out
+							</button>
+						</>
+					)}
 				</div>
 
 				{/* Mobile toggle */}
@@ -113,24 +137,50 @@ const Navbar = () => {
 						))}
 					</div>
 					<div className="flex flex-col gap-3 px-4">
-						<button
-							className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-							onClick={() => {
-								navigate('/login');
-								setOpen(false);
-							}}
-						>
-							Log In
-						</button>
-						<button
-							className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
-							onClick={() => {
-								navigate('/signup');
-								setOpen(false);
-							}}
-						>
-							Get Started
-						</button>
+						{!user ? (
+							<>
+								<button
+									className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+									onClick={() => {
+										navigate('/login');
+										setOpen(false);
+									}}
+								>
+									Log In
+								</button>
+								<button
+									className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+									onClick={() => {
+										navigate('/signup');
+										setOpen(false);
+									}}
+								>
+									Get Started
+								</button>
+							</>
+						) : (
+							<>
+								<button
+									className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+									onClick={() => {
+										navigate('/profile');
+										setOpen(false);
+									}}
+								>
+									Profile
+								</button>
+								<button
+									className="w-full rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-gray-900"
+									onClick={async () => {
+										await signOut();
+										navigate('/');
+										setOpen(false);
+									}}
+								>
+									Log Out
+								</button>
+							</>
+						)}
 					</div>
 				</div>
 			</div>
